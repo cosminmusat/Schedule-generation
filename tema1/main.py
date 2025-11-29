@@ -14,7 +14,8 @@ if __name__ == "__main__":
     input = read_yaml_file(input_file)
     # solve_context.perform_solve(input)
 
-    timetable = {}
+    # timetable =  {'Luni': {(8, 10): {'EG390': None}}}
+    timetable = {'Luni': {(8, 10): {'EG324': None, 'EG390': ('Andreea Dinu', 'DS')}}}
 
     astar = AstarSolveStrategy()
     astar.solve(input)

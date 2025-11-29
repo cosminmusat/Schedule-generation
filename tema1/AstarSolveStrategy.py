@@ -13,7 +13,7 @@ class AstarSolveStrategy(SolveStrategy):
     def solve(self, input: dict):
         self.input = input
         self.days = input[utils.ZILE]
-        self.intervals = input[utils.INTERVALE]
+        self.intervals = list(map(eval, input[utils.INTERVALE]))
         self.subjects = list(input[utils.MATERII].keys())
         self.profs = list(input[utils.PROFESORI].keys())
         self.rooms = list(input[utils.SALI].keys())
@@ -23,45 +23,45 @@ class AstarSolveStrategy(SolveStrategy):
     def get_neighbours(self, node: Timetable):
         neighbours = []
         # Generate neighbours logic
-        day_idx = 0
+        day_idx = -1
         days_node = list(node.keys())
         for i, day in enumerate(self.days):
             if day not in days_node:
                 break
             day_idx = i
-        interval_idx = 0
+        interval_idx = -1
         intervals_day_node = list(node.get(self.days[day_idx], {}).keys())
         for i, interval in enumerate(self.intervals):
             if interval not in intervals_day_node:
                 break
             interval_idx = i
-        room_idx = 0
+        room_idx = -1
         rooms_interval_node = list(node.get(self.days[day_idx], {}).get(self.intervals[interval_idx], {}).keys())
         for i, room in enumerate(self.rooms):
             if room not in rooms_interval_node:
                 break
             room_idx = i
-
-        node_copy = copy.deepcopy(node)
-        if room_idx + 1 == len(self.rooms):
-            if interval_idx + 1 == len(self.intervals):
-                if day_idx + 1 == len(self.days):
-                    return []
-                else:
-                    day_idx += 1
-                    interval_idx = 0
-                    room_idx = 0
-            else:
-                interval_idx += 1
-                room_idx = 0
+        
+        if day_idx == -1 and interval_idx == -1 and room_idx == -1:
+            day_idx = interval_idx = room_idx = 0
         else:
             room_idx += 1
+            if room_idx == len(self.rooms):
+                room_idx = 0
+                interval_idx += 1
+                if interval_idx == len(self.intervals):
+                    interval_idx = 0
+                    day_idx += 1
+                    if day_idx == len(self.days):
+                        return []
+
+        node_copy = copy.deepcopy(node)
 
         node_copy.setdefault(self.days[day_idx], {}).setdefault(self.intervals[interval_idx], {})
 
         empty_room_case_added = False
         for prof in self.profs:
-            for subject in self.input[utils.PROFESORI][prof][utils.MATERII]:
+            for subject in self.subjects:
 
                 new_node = node_copy
                 new_node[self.days[day_idx]][self.intervals[interval_idx]][self.rooms[room_idx]] = (prof, subject)
