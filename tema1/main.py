@@ -15,16 +15,21 @@ if __name__ == "__main__":
         solve_context = SolveContext(AstarSolveStrategy())
     
     input = read_yaml_file(input_file)
+
     res = solve_context.perform_solve(input)
     print(res)
     end = time.perf_counter()
     print(f"Elapsed: {end - start:.6f} s")
 
     timetable = res
-
     constangerii_incalcate, materii_neacoperite = check_constraints.check_mandatory_constraints(timetable, input)
     print(f'Constrangeri incalcate: {constangerii_incalcate}, Materii neacoperite: {materii_neacoperite}')
     constangerii_incalcate = check_constraints.check_optional_constraints(timetable, input)
     print(f'Constrangeri optionale incalcate: {constangerii_incalcate}')
+
+    # print(solve_context.strategy.check_student_allocation(timetable))
+    # print(f'Alocarea studentilor: {student_allocation}')
+    # print(f'Intervale ramase pentru profesori: {rpi}')
+    # print(f'Intervale ramase pentru sali: {rrs}')
 
     # print(utils.pretty_print_timetable(timetable, input_file))
