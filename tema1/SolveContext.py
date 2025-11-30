@@ -3,7 +3,7 @@ class SolveContext:
         self.strategy = strategy
 
     def perform_solve(self, input):
-        self.strategy.solve(input)
+        return self.strategy.solve(input)
 
     def set_solving_strategy(self, strategy):
         self.strategy = strategy
